@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consultar Ocorrências</title>
+  <link rel="stylesheet" href="../css/consultarocorrencias.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+
+    <!-- 🔁 CÓPIA EXATA DA BARRA DO index.html -->
+    <header>
+    <div class="logo-container">
+     <img src="../chat.png" alt="Logo Eyes Everywhere" class="logo-empresa">
+        </div>
+             
+      <div class="nav">
+        <nav>
+            <ul>
+                <li><a href="../html/index.html" class="apagado">Home</a></li>
+                <li><a href="../html/consultarocorrencias.html" class="ativo">Consulta Ocorrências</a></li>
+            </ul>
+              
+        </nav>
+        <div class="auth">
+          <a href="../html/Login.html">Entrar</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 📄 CONTEÚDO DA PÁGINA -->
+    <main class="main-content">
+      <div class="table-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>Consulta de Ocorrências</h2>
+          <div class="search-bar">
+            <input type="text" v-model="filtro" placeholder="Procurar por tipo ou local...">
+            <button @click.prevent>🔍</button>
+          </div>
+        </div>
+        <table>
+            <thead>
+              <tr>
+                <th>Tipo de Ocorrência</th>
+                <th>Data</th>
+                <th>Localização</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(ocorrencia, index) in ocorrenciasFiltradas" :key="index">
+                <td>{{ ocorrencia.tipo }}</td>
+                <td>{{ ocorrencia.data }}</td>
+                <td>{{ ocorrencia.local }}</td>
+                <td>{{ ocorrencia.estado }}</td>
+              </tr>
+            </tbody>
+          </table>          
+      </div>
+    </main>
+  </div>
+
+  <!-- Vue app -->
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          ocorrencias: [],
+          filtro: ''
+        };
+      },
+      computed: {
+        ocorrenciasFiltradas() {
+          return this.ocorrencias.filter(o =>
+            o.tipo.toLowerCase().includes(this.filtro.toLowerCase()) ||
+            o.local.toLowerCase().includes(this.filtro.toLowerCase())
+          );
+        }
+      },
+      mounted() {
+        const dados = localStorage.getItem("ocorrencias");
+        this.ocorrencias = dados ? JSON.parse(dados) : [];
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>
